@@ -1,7 +1,9 @@
+import cors from "cors";
 import { Router } from "express";
 import TaskRepo from "../repository/taskRepository";
 
 const todoRouter = Router();
+todoRouter.use(cors())
 
 const tasksRepo = new TaskRepo;
 

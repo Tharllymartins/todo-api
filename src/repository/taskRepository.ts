@@ -11,8 +11,8 @@ class TaskRepo {
         return this.tasks;
     }
 
-    public create({name, status}: Omit<Task, "id">): Task {
-        const task = new Task({ name, status })
+    public create({ name }: Omit<Task, "id">): Task {
+        const task = new Task({ name, status: "To do" })
         this.tasks.push(task);
         return task;
     }

@@ -1,5 +1,10 @@
-import Task from "../model/Task";
+import Task from "../models/Task";
 
+interface TasksResume {
+    total: number;
+    todo: number;
+    done: number
+}
 class TaskRepo {
     private tasks: Task[];
 
@@ -18,10 +23,21 @@ class TaskRepo {
     }
 
     public update({ status, id }: Omit<Task, "name">) {
-        const taskIndex = this.tasks.findIndex(task => task.id === id)
+        const taskIndex = this.tasks.findIndex(task => task.id === id)        
         if (taskIndex >= 0 ) {
             this.tasks[taskIndex].status = status
             return this.tasks[taskIndex];
+        } else {
+            throw "Task not found"
+        }
+    }
+
+    public delete( { id }: Omit<Task, "name" | "status"> ) {
+        const taskIndex = this.tasks.findIndex(task => task.id === id)
+        if (taskIndex >= 0) {
+            this.tasks.splice(taskIndex, 1)
+        } else {
+            throw "Task not found"
         }
     }
 }

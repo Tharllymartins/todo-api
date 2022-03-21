@@ -1,6 +1,6 @@
 import cors from "cors";
 import { Router } from "express";
-import TaskRepo from "../repository/taskRepository";
+import TaskRepo from "../repositories/taskRepository";
 
 const todoRouter = Router();
 todoRouter.use(cors())
@@ -27,9 +27,24 @@ todoRouter.patch("/status/:id", (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
 
-    const task = tasksRepo.update({ status, id });
+    try {
+        const task = tasksRepo.update({ status, id });
 
-    return res.json(task);
+        return res.json(task);
+    } catch (error) {
+        return res.status(400).json({msg: error})
+    }
+})
+
+todoRouter.delete("/:id", (req, res) => {
+    const { id } = req.params;
+    try {
+        tasksRepo.delete({ id })
+        return res.status(202).json()
+    } catch (error) {
+        return res.status(400).json({msg: error})
+    }
+
 })
 
 

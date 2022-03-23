@@ -9,8 +9,10 @@ const tasksRepo = new TaskRepo;
 
 todoRouter.get("/", ( req, res ) => {
     try {
-        const allTasks = tasksRepo.all()
-        return res.json(allTasks)
+        const { status }: any = req.query;
+        const tasks = status ? tasksRepo.getStatus({ status }) : tasksRepo.all()
+        const resume = tasksRepo.resume()
+        return res.json({tasks, resume})
     } catch(err){
         return res.status(400).json()
     }

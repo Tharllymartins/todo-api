@@ -12,8 +12,38 @@ class TaskRepo {
         this.tasks = []
     }
 
+    public resume(): TasksResume{
+        const { done, todo } = this.tasks.reduce(
+            (accum: TasksResume, task: Task) => {
+                switch (task.status) {
+                    case "Done":
+                        accum.done += 1;
+                        break;
+                    case "To do":
+                        accum.todo += 1;
+                        break;
+                    default:
+                        break;
+                }
+                return accum;
+            },
+            { //Formato do objeto accumulator
+                done: 0,
+                todo: 0,
+                total: 0
+            }
+        );
+        const total = done + todo;
+        return { done, todo, total }
+    }
+
     public all(): Task[]{
         return this.tasks;
+    }
+
+    public getStatus({status}: Omit<Task, "id" | "name">): Task[]{
+        const tasksFiltered = this.tasks.filter(task => task.status === status)
+        return tasksFiltered;
     }
 
     public create({ name }: Omit<Task, "id">): Task {

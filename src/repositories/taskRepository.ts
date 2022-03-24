@@ -52,10 +52,11 @@ class TaskRepo {
         return task;
     }
 
-    public update({ status, id }: Omit<Task, "name">) {
+    public update({ name, status, id }: Task) {
         const taskIndex = this.tasks.findIndex(task => task.id === id)        
-        if (taskIndex >= 0 ) {
-            this.tasks[taskIndex].status = status
+        if (taskIndex >= 0) {
+            this.tasks[taskIndex].status = status ? status : this.tasks[taskIndex].status;
+            this.tasks[taskIndex].name = name ? name : this.tasks[taskIndex].name;
             return this.tasks[taskIndex];
         } else {
             throw "Task not found"

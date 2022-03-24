@@ -25,12 +25,17 @@ todoRouter.post("/", ( req, res ) => {
     return res.status(201).json(task)
 })
 
-todoRouter.patch("/status/:id", (req, res) => {
+todoRouter.patch("/:id", (req, res) => {
     const { id } = req.params;
-    const { status } = req.body;
+    const { status, name } = req.body;
 
+    // Verifica se os campos de status e name estão preenchidos
+    if( !status && !name ) {
+        return res.status(400).json({msg: "Status and name of the request are empty"})
+    }
+    // Tenta realizar a atualziação dos dados
     try {
-        const task = tasksRepo.update({ status, id });
+        const task = tasksRepo.update({ name, status, id });
 
         return res.json(task);
     } catch (error) {

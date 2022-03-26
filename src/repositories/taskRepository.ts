@@ -7,7 +7,6 @@ interface TasksResume {
 }
 @EntityRepository(Task)
 class TaskRepo extends Repository<Task> {
-
     public resume(tasks: any): TasksResume{
         const { done, todo } = tasks.reduce(
             (accum: TasksResume, task: Task) => {

@@ -20,10 +20,11 @@ todoRouter.get("/", async ( req, res ) => {
 })
 
 todoRouter.post("/", async ( req, res ) => {
-    const { name } = req.body;
+    const { name, user_id } = req.body;
     const tasksRepo = getCustomRepository(TaskRepo);
     const task = tasksRepo.create({
         name,
+        user_id,
         status: "To do"
     })
     await tasksRepo.save(task)

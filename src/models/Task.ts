@@ -1,9 +1,17 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import User from './User';
 
 @Entity('tasks')
 class Task {
     @PrimaryGeneratedColumn('uuid')
     id: string;
+
+    @Column()
+    user_id: string;
+
+    @ManyToOne(() => User)
+    @JoinColumn({ name: 'user_id' })
+    user: User;
 
     @Column()
     name: string;

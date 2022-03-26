@@ -1,17 +1,16 @@
-import { uuid } from "uuidv4"
+import { Entity, Column,PrimaryGeneratedColumn } from 'typeorm';
 
+@Entity('tasks')
 class Task {
+    @PrimaryGeneratedColumn('uuid')
     id: string;
 
+    @Column()
     name: string;
 
-    status: 'To do' | 'Done'
+    @Column()
+    status: 'To do' | 'Doing' | 'Done' 
 
-    constructor({ name, status}: Omit<Task, 'id'>){
-        this.id = uuid();
-        this.name = name;
-        this.status = status
-    }
 }
 
 

@@ -1,42 +1,45 @@
 import cors from "cors";
 import { Router } from "express";
 import TaskRepo from "../repositories/taskRepository";
+import { Any, getCustomRepository } from 'typeorm'
 
 const todoRouter = Router();
 todoRouter.use(cors())
 
-const tasksRepo = new TaskRepo;
-
-todoRouter.get("/", ( req, res ) => {
+todoRouter.get("/", async ( req, res ) => {
     try {
+        const tasksRepo = getCustomRepository(TaskRepo);
         const { status }: any = req.query;
-        const tasks = status ? tasksRepo.getStatus({ status }) : tasksRepo.all()
-        const resume = tasksRepo.resume()
+        const tasks = status ? await tasksRepo.find({ status }) : await tasksRepo.find()
+        const resume = tasksRepo.resume(tasks)
         return res.json({tasks, resume})
+
     } catch(err){
         return res.status(400).json()
     }
 })
 
-todoRouter.post("/", ( req, res ) => {
-    const { name, status } = req.body;
-    const task = tasksRepo.create({name, status});
+todoRouter.post("/", async ( req, res ) => {
+    const { name } = req.body;
+    const tasksRepo = getCustomRepository(TaskRepo);
+    const task = tasksRepo.create({
+        name,
+        status: "To do"
+    })
+    await tasksRepo.save(task)
 
     return res.status(201).json(task)
 })
 
-todoRouter.patch("/:id", (req, res) => {
-    const { id } = req.params;
-    const { status, name } = req.body;
 
-    // Verifica se os campos de status e name estão preenchidos
-    if( !status && !name ) {
-        return res.status(400).json({msg: "Status and name of the request are empty"})
-    }
+todoRouter.patch("/:id", async (req, res) => {
+    const { id } = req.params;
+    const data = req.body;
+    const taskRepo = getCustomRepository(TaskRepo);
+
     // Tenta realizar a atualziação dos dados
     try {
-        const task = tasksRepo.update({ name, status, id });
-
+        const task = await taskRepo.update(id, data);
         return res.json(task);
     } catch (error) {
         return res.status(400).json({msg: error})
@@ -45,8 +48,9 @@ todoRouter.patch("/:id", (req, res) => {
 
 todoRouter.delete("/:id", (req, res) => {
     const { id } = req.params;
+    const taskRepo = getCustomRepository(TaskRepo)
     try {
-        tasksRepo.delete({ id })
+        taskRepo.delete(id)
         return res.status(202).json()
     } catch (error) {
         return res.status(400).json({msg: error})

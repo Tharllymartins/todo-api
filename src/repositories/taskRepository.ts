@@ -1,19 +1,15 @@
 import Task from "../models/Task";
-
+import { EntityRepository, Repository } from 'typeorm'
 interface TasksResume {
     total: number;
     todo: number;
     done: number
 }
-class TaskRepo {
-    private tasks: Task[];
+@EntityRepository(Task)
+class TaskRepo extends Repository<Task> {
 
-    constructor(){
-        this.tasks = []
-    }
-
-    public resume(): TasksResume{
-        const { done, todo } = this.tasks.reduce(
+    public resume(tasks: any): TasksResume{
+        const { done, todo } = tasks.reduce(
             (accum: TasksResume, task: Task) => {
                 switch (task.status) {
                     case "Done":
@@ -36,7 +32,8 @@ class TaskRepo {
         const total = done + todo;
         return { done, todo, total }
     }
-
+}
+    /*
     public all(): Task[]{
         return this.tasks;
     }
@@ -71,6 +68,6 @@ class TaskRepo {
             throw "Task not found"
         }
     }
-}
+    */
 
 export default TaskRepo;

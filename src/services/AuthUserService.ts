@@ -7,8 +7,12 @@ interface Request {
     password: string;
 }
 
+interface Response {
+    user: User;
+}
+
 class AuthUserService{
-    public async execute({email, password}: Request): Promise<User> {
+    public async execute({email, password}: Request): Promise<Response> {
         const userRepo = getRepository(User);
         const user = await userRepo.findOne({
             where: { email }
@@ -22,9 +26,11 @@ class AuthUserService{
 
         if (!passwordMatched){
             throw "Incorrect e-mail/password"
-        }   
+        }
+        
+        delete user.password;
 
-        return user;
+        return {user};
     }
 }
 

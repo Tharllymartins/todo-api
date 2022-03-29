@@ -2,9 +2,11 @@ import cors from "cors";
 import { Router } from "express";
 import TaskRepo from "../repositories/taskRepository";
 import { Any, getCustomRepository } from 'typeorm'
+import ensureAutheticated from "../middlewares/ensureAutheticated";
 
 const todoRouter = Router();
 todoRouter.use(cors())
+todoRouter.use(ensureAutheticated)
 
 todoRouter.get("/", async ( req, res ) => {
     try {

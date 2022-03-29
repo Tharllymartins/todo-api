@@ -22,13 +22,13 @@ class AuthUserService{
         })
 
         if (!user){
-            throw "Incorrect e-mail/password"
+            throw new Error("Incorrect e-mail/password");
         }
         
         const passwordMatched = await compare(password, user.password!)
 
         if (!passwordMatched){
-            throw "Incorrect e-mail/password"
+            throw new Error("Incorrect e-mail/password");
         }
         
         const { expiresIn, secret } = auth.jwt

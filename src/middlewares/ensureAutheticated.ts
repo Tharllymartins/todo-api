@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction, request } from "express";
+import { Request, Response, NextFunction } from "express";
 import { JwtPayload, verify } from "jsonwebtoken"
 import auth from "../config/auth";
 
@@ -18,7 +18,7 @@ export default function ensureAutheticated(req: Request, res: Response, next: Ne
         req.user = {
             id: sub,
         }
-        
+
         return next();
     } catch {
         throw new Error("Invalid JWT token");

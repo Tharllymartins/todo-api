@@ -1,8 +1,9 @@
 import cors from "cors";
 import { Router } from "express";
 import TaskRepo from "../repositories/taskRepository";
-import { Any, getCustomRepository } from 'typeorm'
+import { getCustomRepository } from 'typeorm'
 import ensureAutheticated from "../middlewares/ensureAutheticated";
+import CreateTaskService from "../services/CreateTaskService";
 
 const todoRouter = Router();
 todoRouter.use(cors())
@@ -28,14 +29,13 @@ todoRouter.get("/", async ( req, res ) => {
 })
 
 todoRouter.post("/", async ( req, res ) => {
-    const { name, user_id } = req.body;
-    const tasksRepo = getCustomRepository(TaskRepo);
-    const task = tasksRepo.create({
+    const { name } = req.body;
+    const { id } = req.user;
+    const createTask = new CreateTaskService;
+    const task = await createTask.execute({
         name,
-        user_id,
-        status: "To do"
+        id
     })
-    await tasksRepo.save(task)
 
     return res.status(201).json(task)
 })

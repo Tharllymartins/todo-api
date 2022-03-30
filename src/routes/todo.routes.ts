@@ -46,7 +46,7 @@ todoRouter.patch("/:id", async (req, res) => {
     const data = req.body;
     const taskRepo = getCustomRepository(TaskRepo);
 
-    // Tenta realizar a atualziação dos dados
+    // Tenta realizar a atualiziação dos dados
     try {
         const task = await taskRepo.update(id, data);
         return res.json(task);

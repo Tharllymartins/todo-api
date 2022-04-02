@@ -11,9 +11,19 @@ export default class CreateTaskService {
     public async execute({ name, id }: Request): Promise<Task>{
         const taskRepo = getRepository(Task)
 
+        const userExist = taskRepo.findOne({
+            where: {
+                user_id: id
+            }
+        });
+
+        if (!userExist){
+            throw new Error("User does not exist!")
+        }
+
         const task = taskRepo.create({
             name,
-            id,
+            user_id: id,
             status: "To do"
         })
 

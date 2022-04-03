@@ -1,4 +1,5 @@
 import {MigrationInterface, QueryRunner, Table, TableColumn, TableForeignKey} from "typeorm";
+import TagTasks from "../../models/TagTasks";
 
 export default class CreateTagsOnATask1648905112366 implements MigrationInterface {
 
@@ -15,35 +16,50 @@ export default class CreateTagsOnATask1648905112366 implements MigrationInterfac
                 },
                 {
                     name: 'name',
-                    type: 'string',
-                },
-                {
-                    name: 'user_id',
-                    type: 'uuid',
-                    isNullable: true
+                    type: 'varchar',
                 }
             ]
         }))
 
-        await queryRunner.createForeignKey('tags', new TableForeignKey({
-            name: 'userId',
-            columnNames: [ 
-                'user_id'
+        await queryRunner.createTable( new Table({
+            name: 'user_tags',
+            columns: [
+                {
+                    name: 'user_id',
+                    type: 'uuid',
+                    isPrimary: true,
+                },
+                {
+                    name: 'tag_id',
+                    type: 'uuid',
+                    isPrimary: true,
+                }
             ],
-            referencedColumnNames: ['id'],
-            referencedTableName: 'users',
-            onDelete: 'CASCADE',
-            onUpdate: 'CASCADE'
-        }))
-
-        await queryRunner.addColumn('tasks', new TableColumn({
-            name: 'tags',
+            foreignKeys: [
+                {
+                  name: "UserId",
+                  referencedTableName: "users",
+                  referencedColumnNames: ["id"],
+                  columnNames: ["user_id"],
+                  onDelete: "CASCADE",
+                  onUpdate: "CASCADE",
+                },
+                {
+                  name: "TagId",
+                  referencedTableName: "tags",
+                  referencedColumnNames: ["id"],
+                  columnNames: ["tag_id"],
+                  onDelete: "CASCADE",
+                  onUpdate: "CASCADE",
+                },
+              ],
         }))
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.dropForeignKey('tags', 'userId');
-
+        await queryRunner.dropForeignKey('user_tags', 'UserId');
+        await queryRunner.dropForeignKey('user_tags', 'TagId')
+        await queryRunner.dropTable('user_tags')
         await queryRunner.dropTable('tags')
     }
 }

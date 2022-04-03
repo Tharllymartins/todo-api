@@ -1,6 +1,8 @@
 import { getRepository } from "typeorm";
-import { hash } from "bcryptjs"
+import { hash } from "bcryptjs";
 import User from "../models/User";
+import auth from "../config/auth";
+import {sign} from "jsonwebtoken";
 
 interface Request{
     name: string;
@@ -29,6 +31,13 @@ class CreateUserService {
         await userRepo.save(user);
 
         delete user.password;
+
+        const { expiresIn, secret } = auth.jwt
+
+        const token = sign({ }, secret, {
+            subject: user.id,
+            expiresIn,
+        });
 
         return user;
     }

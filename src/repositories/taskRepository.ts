@@ -1,14 +1,18 @@
 import Task from "../models/Task";
 import { EntityRepository, Repository } from 'typeorm'
+
+
 interface TasksResume {
     total: number;
     todo: number;
-    done: number
+    done: number;
+    doing: number;
 }
+
 @EntityRepository(Task)
 class TaskRepo extends Repository<Task> {
     public resume(tasks: any): TasksResume{
-        const { done, todo } = tasks.reduce(
+        const { done, todo, doing } = tasks.reduce(
             (accum: TasksResume, task: Task) => {
                 switch (task.status) {
                     case "Done":
@@ -17,19 +21,22 @@ class TaskRepo extends Repository<Task> {
                     case "To do":
                         accum.todo += 1;
                         break;
+                    case "Doing":
+                        accum.doing += 1
                     default:
                         break;
                 }
                 return accum;
             },
             { //Formato do objeto accumulator
-                done: 0,
                 todo: 0,
+                doing: 0,
+                done: 0,
                 total: 0
             }
         );
-        const total = done + todo;
-        return { done, todo, total }
+        const total = done + todo + doing;
+        return { todo, doing, done, total }
     }
 }
     /*

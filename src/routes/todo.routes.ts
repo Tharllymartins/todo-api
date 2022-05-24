@@ -11,7 +11,6 @@ todoRouter.use(ensureAutheticated)
 
 todoRouter.get("/", async ( req, res ) => {
     try {
-        console.log(req.user)
         const tasksRepo = getCustomRepository(TaskRepo);
         const { id } = req.user;
         const { status }: any = req.query;

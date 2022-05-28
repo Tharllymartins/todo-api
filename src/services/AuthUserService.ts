@@ -38,7 +38,7 @@ class AuthUserService{
             expiresIn,
         });
         
-        delete user.password;
+        delete user.password, user.id;
 
         return {
             user,

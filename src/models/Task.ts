@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, OneToMany, JoinTable } from 'typeorm';
+import SubTask from './SubTask';
 import User from './User';
 
 @Entity('tasks')
@@ -7,11 +8,14 @@ class Task {
     id: string;
 
     @Column()
-    user_id: string;
+    user_id?: string;
 
     @ManyToOne(() => User)
     @JoinColumn({ name: 'user_id' })
     user: User;
+
+    @OneToMany(type => SubTask, subtasks => subtasks.task, { eager: true })
+    subtasks: SubTask[];
 
     @Column()
     name: string;

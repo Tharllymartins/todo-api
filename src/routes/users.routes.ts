@@ -12,7 +12,7 @@ const upload = multer(uploadConfig);
 usersRouter.use(cors())
 
 
-usersRouter.post("/", async ( req, res ) => {
+usersRouter.post("/signup", async ( req, res ) => {
     const { email, name, password } = req.body;
     const createUser = new CreateUserService;
     try {
@@ -27,6 +27,23 @@ usersRouter.post("/", async ( req, res ) => {
             password
         })
         return res.status(201).json(user)
+    } catch (error) {
+        return res.json({msg: error})
+    }
+})
+
+usersRouter.post("/auth", async ( req, res ) => {
+    const { email, password } = req.body;
+    try {
+        const authUser = new AuthUserService;
+        const  user  = await authUser.execute({
+            email,
+            password
+        })
+        
+        return res.json(
+            user
+        )
     } catch (error) {
         return res.json({msg: error})
     }

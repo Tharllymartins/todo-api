@@ -29,6 +29,8 @@ export default class CreateTaskService {
 
         await taskRepo.save(task);
 
+        delete task.user_id;
+
         return task;
         
     }

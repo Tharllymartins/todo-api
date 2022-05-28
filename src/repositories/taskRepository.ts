@@ -1,5 +1,6 @@
 import Task from "../models/Task";
-import { EntityRepository, Repository } from 'typeorm'
+import { EntityRepository, getRepository, Repository } from 'typeorm'
+import { request } from "express"
 
 
 interface TasksResume {

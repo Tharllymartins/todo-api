@@ -15,6 +15,11 @@ export class CreateSubTask1653663916992 implements MigrationInterface {
                         default: 'uuid_generate_v4()'
                     },
                     {
+                        name: 'taskId',
+                        type: 'uuid',
+                        isNullable: true,
+                    },
+                    {
                         name: 'name',
                         type: 'varchar',
                         isNullable: false
@@ -38,16 +43,10 @@ export class CreateSubTask1653663916992 implements MigrationInterface {
             })
         )
 
-        await queryRunner.addColumn('sub_tasks', new TableColumn({
-            name: 'task_id',
-            type: 'uuid',
-            isNullable: true,
-        }))
-
         await queryRunner.createForeignKey('sub_tasks', new TableForeignKey({
             name: 'taskId',
             columnNames: [ 
-                'task_id'
+                'taskId'
             ],
             referencedColumnNames: ['id'],
             referencedTableName: 'tasks',
@@ -57,8 +56,8 @@ export class CreateSubTask1653663916992 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.dropForeignKey('taskId', 'taskId');
-        await queryRunner.dropColumn('task_id', 'task_id')
+        await queryRunner.dropForeignKey('sub_tasks', 'taskId');
+        await queryRunner.dropColumn('sub_tasks', 'taskId')
         await queryRunner.dropTable("sub_tasks")
     }
 }

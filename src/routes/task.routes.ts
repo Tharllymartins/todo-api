@@ -5,30 +5,35 @@ import { getCustomRepository } from 'typeorm'
 import ensureAutheticated from "../middlewares/ensureAutheticated";
 import CreateTaskService from "../services/CreateTaskService";
 
-const todoRouter = Router();
-todoRouter.use(cors())
-todoRouter.use(ensureAutheticated)
+const taskRouter = Router();
+taskRouter.use(cors())
+taskRouter.use(ensureAutheticated)
 
-todoRouter.get("/", async ( req, res ) => {
+taskRouter.get("/", async ( req, res ) => {
     try {
-        console.log(req.user)
         const tasksRepo = getCustomRepository(TaskRepo);
         const { id } = req.user;
         const { status }: any = req.query;
-        const tasks = status ? await tasksRepo.find({ where: {
+        const tasks = status ?
+        await tasksRepo.find({ where: {
+            user_id: id,
             status
-        } }) : await tasksRepo.find({ where: {
+        }, select: ["id", "name", "status", "subtasks", "created_at", "updated_at"]  })
+        :
+        await tasksRepo.find({ where: {
             user_id: id
-        } })
+        }, select: ["id", "name", "status", "subtasks", "created_at", "updated_at"] })
         const resume = tasksRepo.resume(tasks)
+
         return res.json({tasks, resume})
 
     } catch(err){
+        console.log(err)
         return res.status(400).json()
     }
 })
 
-todoRouter.post("/", async ( req, res ) => {
+taskRouter.post("/", async ( req, res ) => {
     const { name } = req.body;
     const { id } = req.user;
     const createTask = new CreateTaskService;
@@ -41,12 +46,12 @@ todoRouter.post("/", async ( req, res ) => {
 })
 
 
-todoRouter.patch("/:id", async (req, res) => {
+taskRouter.patch("/:id", async (req, res) => {
     const { id } = req.params;
     const data = req.body;
     const taskRepo = getCustomRepository(TaskRepo);
 
-    // Tenta realizar a atualziação dos dados
+    // Tenta realizar a atualiziação dos dados
     try {
         const task = await taskRepo.update(id, data);
         return res.json(task);
@@ -55,7 +60,7 @@ todoRouter.patch("/:id", async (req, res) => {
     }
 })
 
-todoRouter.delete("/:id", (req, res) => {
+taskRouter.delete("/:id", (req, res) => {
     const { id } = req.params;
     const taskRepo = getCustomRepository(TaskRepo)
     try {
@@ -68,4 +73,4 @@ todoRouter.delete("/:id", (req, res) => {
 })
 
 
-export default todoRouter;
+export default taskRouter;

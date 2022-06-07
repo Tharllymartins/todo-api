@@ -1,9 +1,10 @@
 import cors from "cors";
 import { Router } from "express";
 import TaskRepo from "../repositories/taskRepository";
-import { getCustomRepository } from 'typeorm'
+import { getCustomRepository, getRepository, ObjectID } from 'typeorm'
 import ensureAutheticated from "../middlewares/ensureAutheticated";
 import CreateTaskService from "../services/CreateTaskService";
+import Task from "../models/Task";
 
 const taskRouter = Router();
 taskRouter.use(cors())
@@ -34,12 +35,13 @@ taskRouter.get("/", async ( req, res ) => {
 })
 
 taskRouter.post("/", async ( req, res ) => {
-    const { name } = req.body;
+    const { name, tagId } = req.body;
     const { id } = req.user;
     const createTask = new CreateTaskService;
     const task = await createTask.execute({
         name,
-        id
+        id,
+        tagId
     })
 
     return res.status(201).json(task)
@@ -49,15 +51,12 @@ taskRouter.post("/", async ( req, res ) => {
 taskRouter.patch("/:id", async (req, res) => {
     const { id } = req.params;
     const data = req.body;
-    const taskRepo = getCustomRepository(TaskRepo);
+    const taskRepo = getRepository(Task);
 
     // Tenta realizar a atualiziação dos dados
-    try {
-        const task = await taskRepo.update(id, data);
-        return res.json(task);
-    } catch (error) {
-        return res.status(400).json({msg: error})
-    }
+    const task = await taskRepo.update(id, data)
+    return res.json(task);
+
 })
 
 taskRouter.delete("/:id", (req, res) => {

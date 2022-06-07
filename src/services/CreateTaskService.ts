@@ -5,10 +5,11 @@ import Task from "../models/Task";
 interface Request {
     name: string;
     id?: string;
+    tagId?: string;
 }
 
 export default class CreateTaskService {
-    public async execute({ name, id }: Request): Promise<Task>{
+    public async execute({ name, id, tagId }: Request): Promise<Task>{
         const taskRepo = getRepository(Task)
 
         const userExist = taskRepo.findOne({
@@ -24,6 +25,7 @@ export default class CreateTaskService {
         const task = taskRepo.create({
             name,
             user_id: id,
+            tagId,
             status: "To do"
         })
 

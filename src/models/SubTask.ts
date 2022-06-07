@@ -16,7 +16,7 @@ class SubTask {
     name: string;
 
     @Column()
-    status: 'To do' | 'Doing' | 'Done'
+    status: 'To do' | 'Done'
 
     @CreateDateColumn()
     created_at: Date

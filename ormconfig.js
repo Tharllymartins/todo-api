@@ -3,10 +3,10 @@ module.exports = {
     "url": process.env.DATABASE_URL,
     "synchronize": false,
     "entities": [
-       "src/models/**/*.js"
+       "dist/models/*.js"
     ],
     "migrations": [
-       "src/database/migrations/*.js"
+       "dist/database/migrations/*.js"
     ],
     "cli": {
        "entitiesDir": "src/entity",

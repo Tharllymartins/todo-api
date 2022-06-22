@@ -48,7 +48,7 @@ export class createTag1653833397584 implements MigrationInterface {
             name: "tagId",
             columnNames: ["tagId"],
             referencedColumnNames: ["id"],
-            referencedTableName: "tasks",
+            referencedTableName: "tags",
             onDelete: 'CASCADE',
             onUpdate: 'CASCADE'
         }))

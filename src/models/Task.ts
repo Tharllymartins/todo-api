@@ -1,11 +1,19 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, OneToMany, JoinTable } from 'typeorm';
+import tagRouter from '../routes/tag.routes';
 import SubTask from './SubTask';
+import Tag from './Tag';
 import User from './User';
 
 @Entity('tasks')
 class Task {
     @PrimaryGeneratedColumn('uuid')
     id: string;
+
+    @Column()
+    tagId: string;
+
+    @ManyToOne(() => Tag, tags => tags.tasks, {eager: true})
+    tag?: Tag[];
 
     @Column()
     user_id?: string;

@@ -1,14 +1,18 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import Task from "./Task";
 import User from "./User";
 
 
 @Entity("tags")
-export default class Tag {
+class Tag {
     @PrimaryGeneratedColumn("uuid")
     id: string;
 
     @Column()
     userId: string;
+
+    @OneToMany(() => Task, tasks => tasks.tag)
+    tasks: Task[]
 
     @ManyToOne(() => User, user => user.tags)
     user: User
@@ -23,3 +27,5 @@ export default class Tag {
     updated_at: Date    
 
 }
+
+export default Tag;

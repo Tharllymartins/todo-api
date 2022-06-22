@@ -36,7 +36,7 @@ jobs:
     steps:
       - uses: trstringer/manual-approval@v1
         with:
-          secret: ${{ github.TOKEN }}
+          secret: ${{ github.token }}
           approvers: Tharllymartins
       - uses: akhileshns/heroku-deploy@v3.12.12
         with:

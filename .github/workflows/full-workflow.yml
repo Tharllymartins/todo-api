@@ -28,14 +28,3 @@ jobs:
         cache: 'yarn'
     - run: yarn
     - run: yarn build
-
-  deploy:
-    name: deploy
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: akhileshns/heroku-deploy@v3.12.12
-        with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "okitantodoapi"
-          heroku_email: "tharllymartins16@gmail.com"

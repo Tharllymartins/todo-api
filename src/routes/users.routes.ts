@@ -60,6 +60,10 @@ usersRouter.get("/auth/me", ensureAutheticated, async ( req, res) => {
             id
         }
     }) as User
+
+    if(!user){
+        return res.status(400).json()
+    }
     
     return res.json(user)
 

@@ -38,13 +38,18 @@ taskRouter.post("/", async ( req, res ) => {
     const { name, tagId } = req.body;
     const { id } = req.user;
     const createTask = new CreateTaskService;
-    const task = await createTask.execute({
-        name,
-        id,
-        tagId
-    })
+    try {
+        const task = await createTask.execute({
+            name,
+            id,
+            tagId
+        })
+    
+        return res.status(201).json(task)
+    } catch (error) {
+        return res.status(400).json()
+    }
 
-    return res.status(201).json(task)
 })
 
 
@@ -54,8 +59,17 @@ taskRouter.patch("/:id", async (req, res) => {
     const taskRepo = getRepository(Task);
 
     // Tenta realizar a atualiziação dos dados
-    const task = await taskRepo.update(id, data)
-    return res.json(task);
+    try {
+        const task = await taskRepo.update(id, data)
+        if (task) {
+            return res.json();
+        }
+    } catch (error) {
+        console.log(error)
+        return res.status(400).json()
+    }
+
+    
 
 })
 

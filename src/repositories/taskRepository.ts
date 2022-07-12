@@ -39,17 +39,21 @@ class TaskRepo extends Repository<Task> {
         const total = done + todo + doing;
         return { todo, doing, done, total }
     }
+
+    public getByStatus(status: any, user_id: any): Task[] {
+        const taskRepo = getRepository(Task);
+        let tasksFinded: Task[] = []
+        taskRepo.find({where: [{user_id}, {status}]}).then(
+            (tasks) => { tasksFinded = tasks} 
+        )
+
+        return tasksFinded;
+    }
+
+        
 }
-    /*
-    public all(): Task[]{
-        return this.tasks;
-    }
 
-    public getStatus({status}: Omit<Task, "id" | "name">): Task[]{
-        const tasksFiltered = this.tasks.filter(task => task.status === status)
-        return tasksFiltered;
-    }
-
+/*
     public create({ name }: Omit<Task, "id">): Task {
         const task = new Task({ name, status: "To do" })
         this.tasks.push(task);

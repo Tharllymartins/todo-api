@@ -1,5 +1,4 @@
 import ensureAutheticated from "../middlewares/ensureAutheticated";
-import cors from "cors";
 import { Router } from "express";
 import { getRepository } from "typeorm";
 import  Tag from "../models/Tag";
@@ -7,7 +6,6 @@ import Task from "../models/Task";
 
 
 const tagRouter = Router();
-tagRouter.use(cors())
 tagRouter.use(ensureAutheticated);
 
 

@@ -1,4 +1,3 @@
-import cors from "cors";
 import { Router } from "express";
 import CreateUserService from "../services/CreateUserService";
 import ensureAutheticated from "../middlewares/ensureAutheticated";
@@ -11,7 +10,6 @@ import User from "../models/User";
 
 const usersRouter = Router();
 const upload = multer(uploadConfig);
-usersRouter.use(cors())
 
 
 usersRouter.post("/signup", async ( req, res ) => {

@@ -2,6 +2,7 @@ import {Request, Response} from "express";
 import { getCustomRepository, getRepository } from "typeorm";
 import Task from "../models/Task";
 import TaskRepo from "../repositories/taskRepository";
+import CreateTaskService from "../services/CreateTaskService";
 
 
 
@@ -25,13 +26,59 @@ const getTasks = async (req: Request, res: Response) => {
         })
     }
 
-    const resume = taskRepo.resume(tasks);
+    const overView = taskRepo.overView(tasks);
 
-    return res.json({tasks, resume});
+    return res.json({tasks, overView});
+}
+
+const createTask = async (req: Request, res: Response) => {
+    const { name, tagId } = req.body;
+    const { id } = req.user;
+    const createTaskService = new CreateTaskService;
+    try {
+        const task = await createTaskService.execute({
+            name,
+            id,
+            tagId
+        })
+    
+        return res.status(201).send()
+    } catch (error) {
+        return res.status(400).json()
+    }
+}
+
+const updateTask = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const data = req.body;
+    const taskRepo = getRepository(Task);
+
+    try {
+        const task = await taskRepo.update(id, data)
+        if (task) {
+            return res.json();
+        }
+    } catch (error) {
+        console.log(error)
+        return res.status(400).json()
+    }
+}
+
+const deleteTask = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const taskRepo = getRepository(Task);
+    try {
+        taskRepo.delete(id)
+        return res.status(202).json()
+    } catch (error) {
+        return res.status(400).json({msg: error})
+    }
 }
 
 
-
 export {
-    getTasks
+    getTasks,
+    createTask,
+    updateTask,
+    deleteTask
 }

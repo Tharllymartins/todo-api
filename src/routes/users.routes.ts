@@ -27,8 +27,8 @@ usersRouter.post("/signup", async ( req, res ) => {
             password
         })
         return res.status(201).json(user)
-    } catch (error) {
-        return res.json({msg: error})
+    } catch (error: Error | any) {
+        return res.status(400).json({error: error.message})
     }
 })
 
@@ -44,8 +44,8 @@ usersRouter.post("/auth", async ( req, res ) => {
         return res.json(
             user
         )
-    } catch (error) {
-        return res.json({msg: error})
+    } catch (error: Error | any) {
+        return res.status(400).json({error: error.message})
     }
 })
 
@@ -79,7 +79,7 @@ usersRouter.patch('/avatar', ensureAutheticated, upload.single('avatar'), async 
 
         return res.json(user)
     } catch (error) {
-        return res.json({msg: error})
+        return res.json({error: error})
     }
 })
 

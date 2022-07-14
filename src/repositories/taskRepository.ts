@@ -1,9 +1,8 @@
 import Task from "../models/Task";
-import { EntityRepository, getRepository, Repository } from 'typeorm'
-import { request } from "express"
+import { EntityRepository, Repository } from 'typeorm'
 
 
-interface TasksResume {
+interface IOverView {
     total: number;
     todo: number;
     done: number;
@@ -12,9 +11,9 @@ interface TasksResume {
 
 @EntityRepository(Task)
 class TaskRepo extends Repository<Task> {
-    public resume(tasks: any): TasksResume{
+    public overView(tasks: any): IOverView{
         const { done, todo, doing } = tasks.reduce(
-            (accum: TasksResume, task: Task) => {
+            (accum: IOverView, task: Task) => {
                 switch (task.status) {
                     case "Done":
                         accum.done += 1;
@@ -38,18 +37,10 @@ class TaskRepo extends Repository<Task> {
         );
         const total = done + todo + doing;
         return { todo, doing, done, total }
-    }
+    }       
 }
-    /*
-    public all(): Task[]{
-        return this.tasks;
-    }
 
-    public getStatus({status}: Omit<Task, "id" | "name">): Task[]{
-        const tasksFiltered = this.tasks.filter(task => task.status === status)
-        return tasksFiltered;
-    }
-
+/*
     public create({ name }: Omit<Task, "id">): Task {
         const task = new Task({ name, status: "To do" })
         this.tasks.push(task);
